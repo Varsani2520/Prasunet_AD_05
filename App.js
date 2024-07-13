@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, Linking, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function App() {
@@ -22,6 +22,25 @@ export default function App() {
     setScanned(true);
     setText(data);
     console.log('Type: ' + type + '\nData: ' + data);
+    
+    // Check if the scanned data is a URL
+    if (data.startsWith('http://') || data.startsWith('https://')) {
+      Alert.alert(
+        "Open Link",
+        `Do you want to open this link: ${data}?`,
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Open",
+            onPress: () => Linking.openURL(data)
+          }
+        ],
+        { cancelable: false }
+      );
+    }
   };
 
   if (hasPermission === null) {
